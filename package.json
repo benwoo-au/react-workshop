@@ -5,7 +5,8 @@
   "scripts": {
     "start": "tsx scripts/start.ts",
     "kill-db-port": "tsx scripts/kill-db-port 3333",
-    "postinstall": "tsx scripts/post-install.ts"
+    "postinstall": "tsx scripts/post-install.ts",
+    "test": "npm test --prefix app-react-router-spa -- COURSES/core/08-testing"
   },
   "devDependencies": {
     "@types/concurrently": "^6.4.0",

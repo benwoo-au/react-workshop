@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+import { vi } from 'vitest'
 
 // Test Component
 import { Counter } from './Counter'
@@ -20,7 +20,7 @@ describe('Counter', () => {
   })
 
   it('should add', () => {
-    const setCount = jest.fn()
+    const setCount = vi.fn()
     render(<Counter count={0} setCount={setCount} />)
     const add = screen.getByTestId('add')
     fireEvent.click(add)
@@ -28,7 +28,7 @@ describe('Counter', () => {
   })
 
   it('should subtract', () => {
-    const setCount = jest.fn()
+    const setCount = vi.fn()
     render(<Counter count={1} setCount={setCount} />)
     const subtract = screen.getByTestId('subtract')
     fireEvent.click(subtract)

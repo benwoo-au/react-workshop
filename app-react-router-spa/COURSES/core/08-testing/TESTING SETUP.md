@@ -4,7 +4,7 @@ There's no code to run with `npm start`. Show the tests and run `npm test` if yo
 
 # Main Topics to Cover
 
-- ✅ Using Jest with React Testing Library
+- ✅ Using Vitest with React Testing Library
 - ✅ Testing Approaches - Test the way the user interacts with the UI
 - ✅ Mocking
 
@@ -13,39 +13,61 @@ https://kentcdodds.com/blog/common-mistakes-with-react-testing-library
 
 ## How to install on your own project
 
+Since this app already uses Vite, Vitest is the natural fit. It reuses your existing Vite config (aliases, plugins, etc.).
+
 ```sh
-npm install --save-dev jest
-# If using @testing-library
-npm install --save-dev @testing-library/react @testing-library/jest-dom
+npm install --save-dev vitest happy-dom @testing-library/react @testing-library/jest-dom
+```
+
+In `vite.config.ts`
+
+```ts
+/// <reference types="vitest/config" />
+
+export default defineConfig({
+  // ... your existing config
+  test: {
+    environment: 'happy-dom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['**/test.tsx', '**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+  },
+})
+```
+
+Create `src/test/setup.ts`
+
+```ts
+import '@testing-library/jest-dom/vitest'
 ```
 
 In `package.json`
 
 ```json
 "scripts": {
-  "test": "jest"
-}
-"jest": {
-  "testEnvironment": "jsdom", // Only needed in Jest v27 and up
-  "moduleNameMapper": {
-    "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js",
-    "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.js"
-  }
+  "test": "vitest run",
+  "test:watch": "vitest"
 }
 ```
 
 ## TypeScript Tests
 
-```
-npm i --save-dev @types/jest ts-jest
-```
-
-Add "jest" to the "types" field in tsconfig
-
-In `package.json`
+Vitest ships with its own types. Add this to your app `tsconfig`:
 
 ```json
-"transform": {
-  "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
+"compilerOptions": {
+  "types": ["vitest/globals"]
 }
 ```
+
+With `globals: true`, you can use `describe`, `it`, `expect`, and `vi` without importing them. Import `vi` when you want to be explicit in examples, like `vi.fn()` and `vi.mock()`.
+
+## Jest → Vitest cheat sheet
+
+| Jest | Vitest |
+| --- | --- |
+| `jest.fn()` | `vi.fn()` |
+| `jest.mock()` | `vi.mock()` |
+| `jest.requireActual()` | `vi.importActual()` |
+| `jest.Mock` | `Mock` from `'vitest'` |
+| `testEnvironment: 'jsdom'` | `environment: 'happy-dom'` |
